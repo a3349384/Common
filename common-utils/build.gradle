@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
@@ -20,4 +21,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+publish {
+    userOrg = 'a3349384'
+    groupId = 'cn.zmy.common'
+    artifactId = 'common-utils'
+    publishVersion = '0.0.1'
+    desc = 'Android Utils'
+    website = 'https://github.com/a3349384/Common'
 }

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 
@@ -19,7 +17,7 @@ public class StatusBarUtil
      *
      * @return 是否成功
      */
-    public static boolean setBackground(Activity activity, @ColorInt int color)
+    public static boolean setBackground(Activity activity, int color)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {

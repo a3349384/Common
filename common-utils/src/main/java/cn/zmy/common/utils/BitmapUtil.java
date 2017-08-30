@@ -70,7 +70,7 @@ public class BitmapUtil
      * @param sentBitmap
      *            Bitmap to be converted
      * @param radius
-     *            Desired Radius, 1 < r < 25
+     * Desired Radius, 1 < r < 25
      * @return a copy of the image with a blur
      */
     public static Bitmap blur(Bitmap sentBitmap, int radius)
