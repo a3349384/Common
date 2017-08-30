@@ -20,4 +20,11 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile project(':common-json')
+    compile project(':common-utils')
+
+    provided 'io.reactivex:rxjava:1.3.0'
+    provided 'io.reactivex:rxandroid:1.2.1'
 }
