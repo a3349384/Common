@@ -9,13 +9,13 @@ import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.animation.Animation;
-import android.widget.ImageView;
 
 /**
  * Created by zmy on 2016/8/4.
  */
-public class CircleImageView extends ImageView
+public class CircleImageView extends AppCompatImageView
 {
     private static final int KEY_SHADOW_COLOR = 0x1E000000;
     private static final int FILL_SHADOW_COLOR = 0x3D000000;

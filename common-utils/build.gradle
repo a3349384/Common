@@ -27,7 +27,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-utils'
-    publishVersion = '0.0.3'
+    publishVersion = '0.0.4'
     desc = 'Android Utils'
     website = 'https://github.com/a3349384/Common'
 }
