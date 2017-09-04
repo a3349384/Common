@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LinearRadioLayout">
+        <attr name="LinearRadioLayout_checkable" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="View">
+        <attr name="View_checkable" format="boolean"/>
+    </declare-styleable>
+</resources>
