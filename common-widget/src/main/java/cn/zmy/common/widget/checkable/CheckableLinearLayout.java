@@ -1,10 +1,13 @@
 package cn.zmy.common.widget.checkable;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
+
+import cn.zmy.common.widget.R;
 
 /**
  * Created by zmy on 2017/9/14.
@@ -17,17 +20,20 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable
 
     public CheckableLinearLayout(Context context)
     {
-        super(context);
+        this(context, null);
     }
 
     public CheckableLinearLayout(Context context, @Nullable AttributeSet attrs)
     {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public CheckableLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CheckableLinearLayout, defStyleAttr, 0);
+        setChecked(array.getBoolean(R.styleable.CheckableLinearLayout_CLL_checkable, false));
+        array.recycle();
     }
 
     @Override
