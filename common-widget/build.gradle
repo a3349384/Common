@@ -29,7 +29,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-widget'
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
     desc = 'Android widget'
     website = 'https://github.com/a3349384/Common'
 }

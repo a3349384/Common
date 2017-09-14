@@ -7,4 +7,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="测试ToolbarFragmentActivity"/>
+    <Button android:id="@+id/buttonTestCheckableWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试TestCheckableWidget"/>
 </LinearLayout>

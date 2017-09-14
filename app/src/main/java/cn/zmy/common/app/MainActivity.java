@@ -26,5 +26,14 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, TestToolbarFragmentActivity.class));
             }
         });
+
+        findViewById(R.id.buttonTestCheckableWidget).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(MainActivity.this, TestCheckableWidgetActivity.class));
+            }
+        });
     }
 }

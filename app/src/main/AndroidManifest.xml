@@ -15,5 +15,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestToolbarFragmentActivity"/>
+        <activity android:name=".TestCheckableWidgetActivity"/>
     </application>
 </manifest>
