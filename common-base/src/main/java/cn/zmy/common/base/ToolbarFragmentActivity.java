@@ -1,6 +1,5 @@
 package cn.zmy.common.base;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,7 +38,6 @@ public abstract class ToolbarFragmentActivity extends AppCompatActivity
 
         //Toolbar
         mToolbar = this.onCreateToolbar();
-        mToolbar.setBackgroundColor(Color.RED);
         linearLayoutRoot.addView(mToolbar);
         setSupportActionBar(mToolbar);
         //解决直接调用toolbar.setTitle无效的问题
@@ -61,6 +59,11 @@ public abstract class ToolbarFragmentActivity extends AppCompatActivity
         }
         mFragmentContent = onCreateFragment();
         getSupportFragmentManager().beginTransaction().replace(contentContainer.getId(), mFragmentContent, FRAGMENT_TAG_KEY).commit();
+
+        if (mFragmentContent != null && mFragmentContent instanceof IToolbatAware)
+        {
+            ((IToolbatAware) mFragmentContent).setToolbar(mToolbar);
+        }
     }
 
     @Override
