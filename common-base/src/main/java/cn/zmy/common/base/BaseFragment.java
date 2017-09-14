@@ -1,12 +1,11 @@
 package cn.zmy.common.base;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
-import cn.zmy.common.utils.ResUtil;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.PublishSubject;
@@ -15,7 +14,7 @@ import rx.subjects.PublishSubject;
  * Created by zmy on 2017/2/27 0027.
  */
 
-public class BaseFragment extends BaseNavigationFragment
+public class BaseFragment extends Fragment
 {
     protected final PublishSubject<LifeCycleEvent> lifecycleSubject;
 
@@ -24,24 +23,6 @@ public class BaseFragment extends BaseNavigationFragment
     public BaseFragment()
     {
         lifecycleSubject = PublishSubject.create();
-    }
-
-    @Override
-    public int getToolbarTextColor()
-    {
-        return Color.WHITE;
-    }
-
-    @Override
-    public int getToolbarBackgroundColor()
-    {
-        return Color.BLUE;
-    }
-
-    @Override
-    public boolean showNavigationIcon()
-    {
-        return true;
     }
 
     @Override

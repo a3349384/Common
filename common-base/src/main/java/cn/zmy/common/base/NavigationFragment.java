@@ -29,7 +29,7 @@ public abstract class NavigationFragment extends Fragment
 
     public final Toolbar getToolbar()
     {
-        NavigationActivity activity = (NavigationActivity) getActivity();
+        ToolbarFragmentActivity activity = (ToolbarFragmentActivity) getActivity();
         if (activity == null){
             return null;
         }
