@@ -188,7 +188,7 @@ public abstract class BaseListFragment extends BaseFragment
             this.emptyViewProvider.hide();
         }
 
-        if (!this.refreshProvider.isRefreshing())
+        if (this.refreshProvider != null && !this.refreshProvider.isRefreshing())
         {
             this.refreshProvider.startRefresh();
         }
@@ -198,7 +198,7 @@ public abstract class BaseListFragment extends BaseFragment
 
     protected void startLoadMore()
     {
-        if (!this.refreshProvider.isLoadingMore())
+        if (this.refreshProvider != null && !this.refreshProvider.isLoadingMore())
         {
             this.refreshProvider.startLoadMore();
         }
