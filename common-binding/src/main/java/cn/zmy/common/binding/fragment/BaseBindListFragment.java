@@ -3,6 +3,7 @@ package cn.zmy.common.binding.fragment;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.Collection;
 import java.util.List;
 
 import cn.zmy.common.base.BaseListFragment;
@@ -29,7 +30,7 @@ public abstract class BaseBindListFragment<M> extends BaseListFragment
                 .compose(bindUntilEvent(whenToCancel()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<M>>()
+                .subscribe(new Observer<Object>()
                 {
                     boolean success;
 
@@ -46,10 +47,10 @@ public abstract class BaseBindListFragment<M> extends BaseListFragment
                     }
 
                     @Override
-                    public void onNext(List<M> dataList)
+                    public void onNext(Object dataList)
                     {
                         bindingAdapter.getItems().clear();
-                        bindingAdapter.getItems().addAll(dataList);
+                        bindingAdapter.getItems().addAll((Collection<? extends M>) dataList);
                         this.success = true;
                     }
                 });
@@ -63,7 +64,7 @@ public abstract class BaseBindListFragment<M> extends BaseListFragment
                 .compose(bindUntilEvent(whenToCancel()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<M>>()
+                .subscribe(new Observer<Object>()
                 {
                     boolean success;
 
@@ -80,9 +81,9 @@ public abstract class BaseBindListFragment<M> extends BaseListFragment
                     }
 
                     @Override
-                    public void onNext(List<M> dataList)
+                    public void onNext(Object o)
                     {
-                        bindingAdapter.getItems().addAll(dataList);
+                        bindingAdapter.getItems().addAll((Collection<? extends M>) o);
                         this.success = true;
                     }
                 });
