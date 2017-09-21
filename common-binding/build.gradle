@@ -28,7 +28,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'cn.zmy.common:common-base:0.0.1'
+    compile 'cn.zmy.common:common-base:0.0.4'
     provided 'io.reactivex:rxjava:1.3.0'
     provided 'io.reactivex:rxandroid:1.2.1'
 
@@ -41,7 +41,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-binding'
-    publishVersion = '0.0.2'
+    publishVersion = '0.0.3'
     desc = 'android databinding util'
     website = 'https://github.com/a3349384/Common'
 }
