@@ -39,9 +39,6 @@ public abstract class ToolbarFragmentActivity extends AppCompatActivity
         //Toolbar
         mToolbar = this.onCreateToolbar();
         linearLayoutRoot.addView(mToolbar);
-        setSupportActionBar(mToolbar);
-        //解决直接调用toolbar.setTitle无效的问题
-        getSupportActionBar().setTitle("");
 
         //放置content
         ViewGroup contentContainer = new FrameLayout(this);

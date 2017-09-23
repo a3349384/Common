@@ -32,7 +32,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-base'
-    publishVersion = '0.0.5'
+    publishVersion = '0.0.6'
     desc = 'okhttp util'
     website = 'https://github.com/a3349384/Common'
 }
