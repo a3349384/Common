@@ -22,6 +22,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.3.1'
+    provided 'com.android.support:recyclerview-v7:25.3.1'
     compile 'cn.zmy.common:common-utils:0.0.4'
 }
 
@@ -29,7 +30,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-widget'
-    publishVersion = '0.0.3'
+    publishVersion = '0.0.4'
     desc = 'Android widget'
     website = 'https://github.com/a3349384/Common'
 }
