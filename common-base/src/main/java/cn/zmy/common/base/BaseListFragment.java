@@ -154,6 +154,11 @@ public abstract class BaseListFragment extends BaseFragment
         }
     }
 
+    public final void refresh()
+    {
+        this.onRefresh();
+    }
+
     protected abstract RecyclerView.Adapter onCreateAdapter();
 
     protected RefreshProvider onCreateRefreshProvider()
@@ -173,15 +178,15 @@ public abstract class BaseListFragment extends BaseFragment
 
     protected void onRefresh()
     {
-        this.startRefresh();
+        this.showRefresh();
     }
 
     protected void onLoadMore()
     {
-        this.startLoadMore();
+        this.showLoadMore();
     }
 
-    protected void startRefresh()
+    protected void showRefresh()
     {
         if (this.emptyViewProvider != null)
         {
@@ -196,7 +201,7 @@ public abstract class BaseListFragment extends BaseFragment
         this.currentState = STATE_REFRESHING;
     }
 
-    protected void startLoadMore()
+    protected void showLoadMore()
     {
         if (this.refreshProvider != null && !this.refreshProvider.isLoadingMore())
         {
