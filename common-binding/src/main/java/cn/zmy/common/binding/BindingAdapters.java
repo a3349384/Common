@@ -14,13 +14,19 @@ import com.bumptech.glide.Glide;
 public class BindingAdapters
 {
     @BindingAdapter({"imageUrl", "holder"})
-    public static void loadImage(ImageView view, String url, Drawable error)
+    public static void loadImage(ImageView imageView, String url, Drawable error)
     {
         if (TextUtils.isEmpty(url))
         {
-            view.setImageDrawable(error);
+            imageView.setImageDrawable(error);
             return;
         }
-        Glide.with(view.getContext()).load(url).placeholder(error).into(view);
+        Glide.with(imageView.getContext()).load(url).placeholder(error).into(imageView);
+    }
+
+    @BindingAdapter({"imageLevel"})
+    public static void setImageLevel(ImageView imageView, int level)
+    {
+        imageView.setImageLevel(level);
     }
 }
