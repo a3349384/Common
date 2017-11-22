@@ -10,23 +10,26 @@ public class ReflectUtil
 {
     public static  <T> T getFieldValue(Object obj, String fieldName)
     {
-        Field field = null;
         try
         {
-            field = obj.getClass().getDeclaredField("mParentWindow");
-        }
-        catch (NoSuchFieldException e)
-        {
-            return null;
-        }
-        field.setAccessible(true);
-        try
-        {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
             return (T) field.get(obj);
         }
-        catch (IllegalAccessException e)
+        catch (Exception e)
         {
             return null;
         }
+    }
+
+    public static void setFieldValue(Object obj, String fieldName, Object value)
+    {
+        try
+        {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(obj, value);
+        }
+        catch (Exception e) {}
     }
 }
