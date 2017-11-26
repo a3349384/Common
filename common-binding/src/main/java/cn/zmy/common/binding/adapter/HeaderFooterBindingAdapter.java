@@ -1,7 +1,10 @@
 package cn.zmy.common.binding.adapter;
 
+import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.LayoutRes;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 /**
@@ -51,22 +54,21 @@ public abstract class HeaderFooterBindingAdapter<M> extends BaseBindingAdapter<M
     @Override
     public final BaseBindingViewHolder<ViewDataBinding> onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        //item
+        ViewDataBinding binding;
         if (viewType < BASE_HEADER_TYPE)
         {
-            return super.onCreateViewHolder(parent, viewType);
+            //item
+            binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getItemLayout(viewType),parent,false);
         }
-
-        ViewDataBinding binding;
-        if (viewType < BASE_FOOTER_TYPE)
+        else if (viewType < BASE_FOOTER_TYPE)
         {
             //header
-            binding = onCreateHeaderBinding(parent,viewType - BASE_HEADER_TYPE);
+            binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getHeaderLayout(viewType - BASE_HEADER_TYPE),parent,false);
         }
         else
         {
             //footer
-            binding = onCreateFooterBinding(parent,viewType - BASE_FOOTER_TYPE);
+            binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getFooterLayout(viewType - BASE_FOOTER_TYPE),parent,false);
         }
         BaseBindingViewHolder<ViewDataBinding> holder = new BaseBindingViewHolder<>(binding.getRoot());
         holder.setBinding(binding);
@@ -128,9 +130,11 @@ public abstract class HeaderFooterBindingAdapter<M> extends BaseBindingAdapter<M
 
     public abstract int getFooterCount();
 
-    public abstract ViewDataBinding onCreateHeaderBinding(ViewGroup parent,int position);
+    public abstract @LayoutRes int getHeaderLayout(int position);
 
-    public abstract ViewDataBinding onCreateFooterBinding(ViewGroup parent,int position);
+    public abstract @LayoutRes int getFooterLayout(int position);
+
+    public abstract @LayoutRes int getItemLayout(int viewType);
 
     public abstract void onBindHeader(ViewDataBinding binding,int position);
 
