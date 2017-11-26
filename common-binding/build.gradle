@@ -37,7 +37,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-binding'
-    publishVersion = '0.0.10'
+    publishVersion = '0.0.11'
     desc = 'android databinding util'
     website = 'https://github.com/a3349384/Common'
 }
