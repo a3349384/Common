@@ -116,6 +116,14 @@ public abstract class HeaderFooterBindingAdapter<M> extends BaseBindingAdapter<M
         return super.getItemViewType(position);
     }
 
+    /*Will NOT be called*/
+    @Override
+    @Deprecated
+    public ViewDataBinding onCreateItemBinding(ViewGroup parent, int viewType)
+    {
+        return null;
+    }
+
     public void notifyHeaderChanged(int position)
     {
         this.notifyItemChanged(position);
