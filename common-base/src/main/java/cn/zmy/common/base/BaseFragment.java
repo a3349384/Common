@@ -1,97 +1,56 @@
 package cn.zmy.common.base;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.View;
+import java.util.concurrent.Callable;
 
+import cn.zmy.common.base.task.ExecutorManager;
+import cn.zmy.common.base.task.ITaskCallback;
 import rx.Observable;
-import rx.functions.Func1;
-import rx.subjects.PublishSubject;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by zmy on 2017/2/27 0027.
  */
 
-public class BaseFragment extends Fragment
+public class BaseFragment extends LifeCycleFragment
 {
-    protected final PublishSubject<LifeCycleEvent> lifecycleSubject;
-
-    protected boolean isViewCreated;
-
-    public BaseFragment()
-    {
-        lifecycleSubject = PublishSubject.create();
-    }
+    private boolean mResumed;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
+    public void onResume()
     {
-        super.onCreate(savedInstanceState);
-        lifecycleSubject.onNext(LifeCycleEvent.CREATE);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        this.isViewCreated = true;
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        lifecycleSubject.onNext(LifeCycleEvent.PAUSE);
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        lifecycleSubject.onNext(LifeCycleEvent.STOP);
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        lifecycleSubject.onNext(LifeCycleEvent.DESTROY);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser)
-    {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser)
+        super.onResume();
+        if (!mResumed)
         {
-            lifecycleSubject.onNext(LifeCycleEvent.VISIBLE);
-        }
-        else
-        {
-            lifecycleSubject.onNext(LifeCycleEvent.INVISIBLE);
+            mResumed = true;
+            onReady();
         }
     }
 
-    protected  <T> Observable.Transformer<T, T> bindUntilEvent(@NonNull final LifeCycleEvent event)
+    /**
+     * 此方法在Fragment第一次可见且可交互时调用
+     * */
+    protected void onReady()
     {
-        return new Observable.Transformer<T, T>()
+
+    }
+
+    protected void runTask(Runnable runnable)
+    {
+        runTask(runnable, Schedulers.newThread());
+    }
+
+    protected void runTask(Runnable runnable, Scheduler scheduler)
+    {
+        if (runnable == null)
         {
-            @Override
-            public Observable<T> call(Observable<T> observable)
-            {
-                Observable<LifeCycleEvent> compareLifecycleObservable =
-                        lifecycleSubject.takeFirst(new Func1<LifeCycleEvent, Boolean>()
-                        {
-                            @Override
-                            public Boolean call(LifeCycleEvent lifeCycleEvent)
-                            {
-                                return lifeCycleEvent.equals(event);
-                            }
-                        });
-                return observable.takeUntil(compareLifecycleObservable);
-            }
-        };
+            return;
+        }
+        ExecutorManager.Instance.getRunableExecutor().run(runnable, scheduler);
+    }
+
+    protected <T> void runTask(Callable<T> callable, ITaskCallback<T> callback, Scheduler scheduler, Observable.Transformer<T, T> unsubscribeWhen)
+    {
+        ExecutorManager.Instance.getCallableExecutor().run(callable, callback, scheduler, unsubscribeWhen);
     }
 }

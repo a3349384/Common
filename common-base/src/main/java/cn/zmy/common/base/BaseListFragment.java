@@ -6,266 +6,173 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import cn.zmy.common.base.provider.CommonRecyclerProvider;
-import cn.zmy.common.base.provider.EmptyViewProvider;
-import cn.zmy.common.base.provider.RecyclerViewProvider;
-import cn.zmy.common.base.provider.RefreshProvider;
-import cn.zmy.common.base.provider.SwipeRefreshLoadMoreProvider;
+import java.util.List;
+
+import cn.zmy.common.base.adapter.BaseListAdapter;
+import cn.zmy.common.base.provider.ILayoutProvider;
+import cn.zmy.common.base.provider.IRecyclerViewConfigurator;
+import cn.zmy.common.base.provider.impl.RecyclerViewConfigurator;
+import cn.zmy.common.base.provider.impl.SingleRecyclerViewProvider;
+import cn.zmy.common.base.task.ITaskCallback;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by zmy on 2017/4/21 0021.
  */
 
-public abstract class BaseListFragment extends BaseFragment
+public abstract class BaseListFragment<M> extends BaseFragment
 {
-    protected final byte STATE_NONE = 0;
-    protected final byte STATE_REFRESHING = 1;
-    protected final byte STATE_LOADINGMORE = 2;
-    protected final byte STATE_REFRESH_COMPLETED = 3;
-    protected final byte STATE_LOADMORE_COMPLETED = 4;
+    protected BaseListAdapter<M> mAdapter;
 
-    protected RefreshProvider refreshProvider;
-    protected RecyclerViewProvider recyclerViewProvider;
-    protected EmptyViewProvider emptyViewProvider;
-    protected int currentPageIndex;
-    protected byte currentState;
-
-    protected RecyclerView.Adapter adapter;
-
-    private RecyclerView.AdapterDataObserver adapterDataObserver;
-
-    public BaseListFragment()
-    {
-        this.currentPageIndex = getStartPageIndex();
-        this.refreshProvider = onCreateRefreshProvider();
-        this.recyclerViewProvider = onCreateRecyclerViewProvider();
-        this.currentState = STATE_NONE;
-    }
+    /**
+     * 记录当前分页的索引
+     * */
+    protected int mCurrentPageIndex;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        FrameLayout rootLayout = new FrameLayout(getContext());
-        rootLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        if (this.refreshProvider == null)
+        ILayoutProvider layoutProvider = onCreateLayoutProvider();
+        if (layoutProvider == null)
         {
-            RecyclerView recyclerView = this.recyclerViewProvider.onCreate(getContext());
-            rootLayout.addView(recyclerView);
+            return null;
         }
-        else
+        ViewGroup root = layoutProvider.getRootLayout(getActivity());
+        RecyclerView recyclerView = layoutProvider.getRecyclerView(getActivity());
+        if (root == null || recyclerView == null)
         {
-            FrameLayout frameLayout = new FrameLayout(getContext());
-            frameLayout.addView(this.recyclerViewProvider.onCreate(getContext()));
-
-            ViewGroup refreshLayout = this.refreshProvider.onCreateView(getContext());
-            refreshLayout.addView(frameLayout);
-            rootLayout.addView(refreshLayout);
-
-            this.refreshProvider.setOnRefreshListener(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    onRefresh();
-                }
-            });
-            this.refreshProvider.setOnLoadMoreListener(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    onLoadMore();
-                }
-            });
+            return null;
         }
+        IRecyclerViewConfigurator recyclerViewConfigurator = onCreateRecyclerViewConfigurator();
+        if (recyclerViewConfigurator != null)
+        {
+            recyclerViewConfigurator.config(recyclerView);
+        }
+        mAdapter = onCreateAdapter();
+        recyclerView.setAdapter(mAdapter);
 
-        return rootLayout;
+        this.onViewCreated(root, recyclerView);
+        return root;
     }
+
+    /**
+     * 创建一个{@link ILayoutProvider}并返回。当需要自定义布局时可以重写此方法。
+     * */
+    protected ILayoutProvider onCreateLayoutProvider()
+    {
+        return new SingleRecyclerViewProvider();
+    }
+
+    /**
+     * 创建一个{@link IRecyclerViewConfigurator}并返回。当需要对RecyclerView进行特殊配置时可以重写此方法。
+     * */
+    protected IRecyclerViewConfigurator onCreateRecyclerViewConfigurator()
+    {
+        return new RecyclerViewConfigurator();
+    }
+
+    /**
+     * 当View创建完成时回调。可以在此对View进行一些特殊配置.
+     * <p>
+     * 此处对RecyclerView做的配置会覆盖在{@link IRecyclerViewConfigurator}中做的配置。
+     * */
+    protected void onViewCreated(ViewGroup root, RecyclerView recyclerView)
+    {
+
+    }
+
+    /**
+     * 创建RecyclerView的适配器
+     * */
+    protected abstract BaseListAdapter<M> onCreateAdapter();
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    protected void onReady()
     {
-        super.onViewCreated(view, savedInstanceState);
-        this.adapter = onCreateAdapter();
-        this.recyclerViewProvider.setAdapter(this.adapter);
-        this.emptyViewProvider = onCreateEmptyViewProvider();
-        if (this.emptyViewProvider != null)
+        super.onReady();
+        this.startRefresh();
+    }
+
+    /**
+     * 开始执行刷新操作
+     * */
+    public void startRefresh()
+    {
+        mAdapter.getItems().clear();
+        mCurrentPageIndex = getStartPageIndex();
+        runTask(() -> getItems(getStartPageIndex()), new ITaskCallback<List<M>>()
         {
-            this.adapterDataObserver = new RecyclerView.AdapterDataObserver()
+            @Override
+            public void onSuccess(List<M> items)
             {
-                @Override
-                public void onChanged()
-                {
-                    super.onChanged();
-                    notifyEmptyViewState();
-                }
-
-                @Override
-                public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount)
-                {
-                    super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-                    notifyEmptyViewState();
-                }
-
-                @Override
-                public void onItemRangeChanged(int positionStart, int itemCount)
-                {
-                    super.onItemRangeChanged(positionStart, itemCount);
-                    notifyEmptyViewState();
-                }
-
-                @Override
-                public void onItemRangeChanged(int positionStart, int itemCount, Object payload)
-                {
-                    super.onItemRangeChanged(positionStart, itemCount, payload);
-                    notifyEmptyViewState();
-                }
-
-                @Override
-                public void onItemRangeInserted(int positionStart, int itemCount)
-                {
-                    super.onItemRangeInserted(positionStart, itemCount);
-                    notifyEmptyViewState();
-                }
-
-                @Override
-                public void onItemRangeRemoved(int positionStart, int itemCount)
-                {
-                    super.onItemRangeRemoved(positionStart, itemCount);
-                    notifyEmptyViewState();
-                }
-            };
-            this.adapter.registerAdapterDataObserver(this.adapterDataObserver);
-        }
-        this.onRefresh();
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        super.onDestroyView();
-        if (this.adapterDataObserver != null)
-        {
-            this.adapter.unregisterAdapterDataObserver(this.adapterDataObserver);
-        }
-    }
-
-    public final void refresh()
-    {
-        this.onRefresh();
-    }
-
-    protected abstract RecyclerView.Adapter onCreateAdapter();
-
-    protected RefreshProvider onCreateRefreshProvider()
-    {
-        return new SwipeRefreshLoadMoreProvider(true,true);
-    }
-
-    protected RecyclerViewProvider onCreateRecyclerViewProvider()
-    {
-        return new CommonRecyclerProvider();
-    }
-
-    protected EmptyViewProvider onCreateEmptyViewProvider()
-    {
-        return null;
-    }
-
-    protected void onRefresh()
-    {
-        this.showRefresh();
-    }
-
-    protected void onLoadMore()
-    {
-        this.showLoadMore();
-    }
-
-    protected void showRefresh()
-    {
-        if (this.emptyViewProvider != null)
-        {
-            this.emptyViewProvider.hide();
-        }
-
-        if (this.refreshProvider != null && !this.refreshProvider.isRefreshing())
-        {
-            this.refreshProvider.startRefresh();
-        }
-
-        this.currentState = STATE_REFRESHING;
-    }
-
-    protected void showLoadMore()
-    {
-        if (this.refreshProvider != null && !this.refreshProvider.isLoadingMore())
-        {
-            this.refreshProvider.startLoadMore();
-        }
-
-        this.currentState = STATE_LOADINGMORE;
-    }
-
-    protected void notifyRefreshState(boolean success)
-    {
-        if (this.refreshProvider != null)
-        {
-            this.refreshProvider.stopRefresh();
-        }
-
-        if (success)
-        {
-            this.currentPageIndex = getStartPageIndex();
-            this.currentState = STATE_REFRESH_COMPLETED;
-        }
-        else
-        {
-            this.currentState = STATE_NONE;
-        }
-        this.notifyEmptyViewState();
-    }
-    
-    protected void notifyLoadMoreSuccessful(boolean success)
-    {
-        if (this.refreshProvider != null)
-        {
-            this.refreshProvider.stopLoadMore();
-        }
-
-        if (success)
-        {
-            this.currentPageIndex ++;
-            this.currentState = STATE_LOADMORE_COMPLETED;
-        }
-        else
-        {
-            this.currentState = STATE_NONE;
-        }
-    }
-
-    protected void notifyEmptyViewState()
-    {
-        if (this.emptyViewProvider != null && this.recyclerViewProvider != null)
-        {
-            int itemsCount = this.recyclerViewProvider.getAdapter().getItemCount();
-            if (itemsCount == 0)
-            {
-                this.emptyViewProvider.show();
+                mAdapter.getItems().addAll(items);
+                onRefreshCompleted(true);
             }
-            else
+
+            @Override
+            public void onError(Throwable ex)
             {
-                this.emptyViewProvider.hide();
+                onRefreshCompleted(false);
             }
-        }
+        }, Schedulers.io(), unsubscribeWhen(LIFECYCLE_STOP));
     }
 
+    /**
+     * 开始执行LoadMore操作
+     * */
+    public void startLoadMore()
+    {
+        runTask(() -> getItems(mCurrentPageIndex + 1), new ITaskCallback<List<M>>()
+        {
+            @Override
+            public void onSuccess(List<M> items)
+            {
+                mAdapter.getItems().addAll(items);
+                mCurrentPageIndex++;
+                onLoadMoreCompleted(true, items.size() > 0);
+            }
+
+            @Override
+            public void onError(Throwable ex)
+            {
+                onLoadMoreCompleted(false, true);
+            }
+        }, Schedulers.io(), unsubscribeWhen(LIFECYCLE_STOP));
+    }
+
+    /**
+     * 返回第一页的索引，默认值为1。
+     * */
     protected int getStartPageIndex()
     {
         return 1;
     }
+
+    /**
+     * 当Refresh完成时调用
+     * */
+    protected void onRefreshCompleted(boolean success)
+    {
+
+    }
+
+    /**
+     * 当LoadMore完成时调用
+     * */
+    protected void onLoadMoreCompleted(boolean success, boolean hasMoreData)
+    {
+
+    }
+
+    /**
+     * 获取指定页的Items。
+     * <p>
+     * 此方法总是在IO线程中执行。
+     * */
+    protected abstract List<M> getItems(int pageIndex);
 }
