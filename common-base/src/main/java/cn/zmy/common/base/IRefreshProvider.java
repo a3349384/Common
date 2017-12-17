@@ -14,6 +14,10 @@ public interface IRefreshProvider
 
     void finishLoadMore();
 
+    boolean isRefreshing();
+
+    boolean isLoadingMore();
+
     void setEnableRefresh(boolean enable);
 
     void setEnableLoadMore(boolean enable);

@@ -1,60 +1,52 @@
 package cn.zmy.common.base.provider;
 
-import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.ViewGroup;
+
+import cn.zmy.common.base.IRefreshProvider;
 
 /**
  * Created by zmy on 2017/4/30.
+ * 使用{@link SwipeRefreshLayout}实现。不支持loadMore
  */
 
-public class SwipeRefreshProvider implements RefreshProvider
+public class SwipeRefreshProvider implements IRefreshProvider
 {
     protected SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
-    public ViewGroup onCreateView(Context context)
-    {
-        this.swipeRefreshLayout = new SwipeRefreshLayout(context);
-        this.swipeRefreshLayout.setColorSchemeResources(android.R.color.black);
-        return this.swipeRefreshLayout;
-    }
-
-    @Override
     public void startRefresh()
     {
-        this.swipeRefreshLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        }, 100);
-    }
-
-    @Override
-    public void stopRefresh()
-    {
-        this.swipeRefreshLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 100);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void startLoadMore()
     {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void stopLoadMore()
+    public void setEnableRefresh(boolean enable)
     {
+        swipeRefreshLayout.setEnabled(enable);
+    }
 
+    @Override
+    public void setEnableLoadMore(boolean enable)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void finishRefresh()
+    {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void finishLoadMore()
+    {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -66,25 +58,18 @@ public class SwipeRefreshProvider implements RefreshProvider
     @Override
     public boolean isLoadingMore()
     {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setOnRefreshListener(final Runnable listener)
     {
-        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                listener.run();
-            }
-        });
+        this.swipeRefreshLayout.setOnRefreshListener(listener::run);
     }
 
     @Override
     public void setOnLoadMoreListener(Runnable listener)
     {
-
+        throw new UnsupportedOperationException();
     }
 }
