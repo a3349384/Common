@@ -1,0 +1,7 @@
+rootProject.ext.compileSdkVersion = 26
+rootProject.ext.targetSdkVersion = 26
+rootProject.ext.minSdkVersion = 15
+rootProject.ext.buildToolsVersion = '26.0.2'
+rootProject.ext.supportVersion = '26.1.0'
+
+rootProject.ext.commonVersion = '1.1.14'

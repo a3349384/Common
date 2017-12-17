@@ -2,7 +2,8 @@ apply plugin: 'java-library'
 apply plugin: 'com.novoda.bintray-release'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation "cn.zmy.common:common-json-interface:$rootProject.commonVersion"
 }
 
 sourceCompatibility = "1.7"
@@ -11,8 +12,8 @@ targetCompatibility = "1.7"
 publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
-    artifactId = 'common-collection'
+    artifactId = 'common-gson'
     publishVersion = rootProject.commonVersion
-    desc = 'Observable list from android databinding'
+    desc = 'gson'
     website = 'https://github.com/a3349384/Common'
 }

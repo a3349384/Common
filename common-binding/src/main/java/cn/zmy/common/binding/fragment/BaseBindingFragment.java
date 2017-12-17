@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cn.zmy.common.base.BaseFragment;
+import cn.zmy.common.base.fragment.BaseFragment;
+
 
 /**
  * Created by zmy on 2017/9/21.

@@ -22,6 +22,6 @@ android {
 dependencies {
     implementation "com.android.support:appcompat-v7:$rootProject.supportVersion"
     implementation "com.android.support:recyclerview-v7:$rootProject.supportVersion"
-    compile project(':common-base')
-    compile project(':common-widget')
+    implementation project(':common-base')
+    implementation project(':common-widget')
 }

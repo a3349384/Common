@@ -1,8 +1,8 @@
 package cn.zmy.common.http.callback;
 
 import cn.zmy.common.http.models.HttpResult;
-import cn.zmy.common.json.JsonUtil;
-import cn.zmy.common.json.Typer;
+import cn.zmy.common.interfaces.json.JsonLoader;
+import cn.zmy.common.interfaces.json.TypeHelper;
 import okhttp3.Call;
 
 /**
@@ -16,7 +16,7 @@ public abstract class JsonCallback<T> extends BaseCallback
     {
         super.onSuccess(call, result);
         String jsonString = new String(result.body);
-        onJsonSuccess((T) JsonUtil.fromString(jsonString,new Typer<T>(){}.type));
+        onJsonSuccess(JsonLoader.instance.fromString(jsonString,new TypeHelper<T>(){}.type));
     }
 
     protected abstract void onJsonSuccess(T t);

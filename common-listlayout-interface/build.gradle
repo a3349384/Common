@@ -5,14 +5,15 @@ apply plugin: 'me.tatarka.retrolambda'
 apply from: '../common-android.gradle'
 
 dependencies {
-
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportVersion"
 }
 
 publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
-    artifactId = 'common-utils'
+    artifactId = 'common-listlayout-interface'
     publishVersion = rootProject.commonVersion
-    desc = 'Android Utils'
+    desc = 'common-listlayout-interface'
     website = 'https://github.com/a3349384/Common'
 }

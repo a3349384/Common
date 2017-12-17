@@ -3,7 +3,7 @@ package cn.zmy.common.http;
 import java.lang.reflect.Type;
 
 import cn.zmy.common.http.models.HttpResult;
-import cn.zmy.common.json.JsonUtil;
+import cn.zmy.common.interfaces.json.JsonLoader;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -31,7 +31,7 @@ public class OkHttpHelper
     {
         HttpResult result = get(url);
         String jsonString = new String(result.body);
-        return JsonUtil.fromString(jsonString,type);
+        return JsonLoader.instance.fromString(jsonString,type);
     }
 
     public HttpResult post(String url,String jsonString) throws Exception

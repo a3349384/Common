@@ -5,14 +5,14 @@ apply plugin: 'me.tatarka.retrolambda'
 apply from: '../common-android.gradle'
 
 dependencies {
-
+    //implementation "cn.zmy.common:common-listlayout-interface:$rootProject.commonVersion"
 }
 
 publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
-    artifactId = 'common-utils'
+    artifactId = 'common-listlayout-smart'
     publishVersion = rootProject.commonVersion
-    desc = 'Android Utils'
+    desc = 'common-listlayout-smart'
     website = 'https://github.com/a3349384/Common'
 }
