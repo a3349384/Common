@@ -15,9 +15,6 @@ import cn.zmy.common.base.provider.IRecyclerViewConfigurator;
 import cn.zmy.common.base.provider.impl.RecyclerViewConfigurator;
 import cn.zmy.common.base.provider.impl.SingleRecyclerViewProvider;
 import cn.zmy.common.base.task.ITaskCallback;
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
