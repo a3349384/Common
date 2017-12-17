@@ -29,7 +29,7 @@ publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-interface'
-    publishVersion = '1.0.1'
+    publishVersion = '1.0.2'
     desc = 'common-interface'
     website = 'https://github.com/a3349384/Common'
 }
