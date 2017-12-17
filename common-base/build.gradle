@@ -31,6 +31,7 @@ dependencies {
     provided 'io.reactivex:rxjava:1.3.0'
     provided 'io.reactivex:rxandroid:1.2.1'
     compile 'cn.zmy.common:common-utils:0.0.4'
+    implementation 'cn.zmy.common:common-collection:1.0.0'
 }
 
 publish {

@@ -3,9 +3,10 @@ package cn.zmy.common.base.adapter;
 
 import android.support.v7.widget.RecyclerView;
 
-import cn.zmy.common.base.collection.ObservableArrayList;
-import cn.zmy.common.base.collection.ObservableList;
-import cn.zmy.common.base.collection.OnListChangedCallback;
+import cn.zmy.common.collection.observale.ObservableArrayList;
+import cn.zmy.common.collection.observale.ObservableList;
+import cn.zmy.common.collection.observale.OnListChangedCallback;
+
 
 /**
  * Created by zmy on 2017/11/29.
