@@ -4,14 +4,14 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import cn.zmy.common.base.provider.ILayoutProvider;
+import cn.zmy.common.base.provider.IListLayoutProvider;
 
 /**
  * Created by zmy on 2017/11/28.
  * 整个Layout仅由一个RecyclerView构成
  */
 
-public class SingleRecyclerViewProvider implements ILayoutProvider
+public class SingleRecyclerViewProvider implements IListLayoutProvider
 {
     private RecyclerView mRecyclerView;
 

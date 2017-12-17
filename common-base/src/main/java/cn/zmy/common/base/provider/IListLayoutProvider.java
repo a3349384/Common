@@ -10,7 +10,7 @@ import android.view.ViewGroup;
  * 用于{@link BaseListFragment}中创建相关View的接口
  */
 
-public interface ILayoutProvider
+public interface IListLayoutProvider
 {
     ViewGroup getRootLayout(Context context);
 

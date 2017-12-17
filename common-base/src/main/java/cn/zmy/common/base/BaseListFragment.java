@@ -10,10 +10,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cn.zmy.common.base.adapter.BaseListAdapter;
-import cn.zmy.common.base.provider.ILayoutProvider;
-import cn.zmy.common.base.provider.IRecyclerViewConfigurator;
-import cn.zmy.common.base.provider.impl.RecyclerViewConfigurator;
-import cn.zmy.common.base.provider.impl.SingleRecyclerViewProvider;
+import cn.zmy.common.base.provider.IListLayoutProvider;
 import cn.zmy.common.base.task.ITaskCallback;
 import rx.schedulers.Schedulers;
 
@@ -23,147 +20,86 @@ import rx.schedulers.Schedulers;
 
 public abstract class BaseListFragment<M> extends BaseFragment
 {
-    protected BaseListAdapter<M> mAdapter;
-
     /**
-     * 记录当前分页的索引
+     * 标志当Fragment准备完成之后是否自动开始刷新
      * */
-    protected int mCurrentPageIndex;
+    protected boolean mAutoLoadDataWhenReady;
+
+    protected BaseListAdapter<M> mAdapter;
+    protected IListLayoutProvider mListLayoutProvider;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        ILayoutProvider layoutProvider = onCreateLayoutProvider();
-        if (layoutProvider == null)
+        this.onSetting();
+        if (mListLayoutProvider == null)
         {
             return null;
         }
-        ViewGroup root = layoutProvider.getRootLayout(getActivity());
-        RecyclerView recyclerView = layoutProvider.getRecyclerView(getActivity());
+        View root = mListLayoutProvider.getRootLayout(getActivity());
+        RecyclerView recyclerView = mListLayoutProvider.getRecyclerView(getActivity());
         if (root == null || recyclerView == null)
         {
             return null;
         }
-        IRecyclerViewConfigurator recyclerViewConfigurator = onCreateRecyclerViewConfigurator();
-        if (recyclerViewConfigurator != null)
-        {
-            recyclerViewConfigurator.config(recyclerView);
-        }
-        mAdapter = onCreateAdapter();
-        recyclerView.setAdapter(mAdapter);
-
         this.onViewCreated(root, recyclerView);
+        recyclerView.setAdapter(mAdapter);
         return root;
     }
 
-    /**
-     * 创建一个{@link ILayoutProvider}并返回。当需要自定义布局时可以重写此方法。
-     * */
-    protected ILayoutProvider onCreateLayoutProvider()
+    protected void onSetting()
     {
-        return new SingleRecyclerViewProvider();
+        setAutoRefreshWhenReady(true);
     }
 
-    /**
-     * 创建一个{@link IRecyclerViewConfigurator}并返回。当需要对RecyclerView进行特殊配置时可以重写此方法。
-     * */
-    protected IRecyclerViewConfigurator onCreateRecyclerViewConfigurator()
-    {
-        return new RecyclerViewConfigurator();
-    }
-
-    /**
-     * 当View创建完成时回调。可以在此对View进行一些特殊配置.
-     * <p>
-     * 此处对RecyclerView做的配置会覆盖在{@link IRecyclerViewConfigurator}中做的配置。
-     * */
-    protected void onViewCreated(ViewGroup root, RecyclerView recyclerView)
+    protected void onViewCreated(View rootView, RecyclerView recyclerView)
     {
 
     }
 
-    /**
-     * 创建RecyclerView的适配器
-     * */
-    protected abstract BaseListAdapter<M> onCreateAdapter();
+    protected void setListLayoutProvider(IListLayoutProvider provider)
+    {
+        mListLayoutProvider = provider;
+    }
+
+    protected void setAdapter(BaseListAdapter<M> adapter)
+    {
+        mAdapter = adapter;
+    }
+
+    protected void setAutoRefreshWhenReady(boolean autoRefresh)
+    {
+        mAutoLoadDataWhenReady = autoRefresh;
+    }
 
     @Override
     protected void onReady()
     {
         super.onReady();
-        this.startRefresh();
+        if (mAutoLoadDataWhenReady)
+        {
+            this.startLoadData();
+        }
     }
 
-    /**
-     * 开始执行刷新操作
-     * */
-    public void startRefresh()
+    protected void startLoadData()
     {
         mAdapter.getItems().clear();
-        mCurrentPageIndex = getStartPageIndex();
-        runTask(() -> getItems(getStartPageIndex()), new ITaskCallback<List<M>>()
+        runTask(this::getItems, new ITaskCallback<List<M>>()
         {
             @Override
             public void onSuccess(List<M> items)
             {
                 mAdapter.getItems().addAll(items);
-                onRefreshCompleted(true);
             }
 
             @Override
             public void onError(Throwable ex)
             {
-                onRefreshCompleted(false);
+                ex.printStackTrace();
             }
         }, Schedulers.io(), unsubscribeWhen(LIFECYCLE_STOP));
-    }
-
-    /**
-     * 开始执行LoadMore操作
-     * */
-    public void startLoadMore()
-    {
-        runTask(() -> getItems(mCurrentPageIndex + 1), new ITaskCallback<List<M>>()
-        {
-            @Override
-            public void onSuccess(List<M> items)
-            {
-                mAdapter.getItems().addAll(items);
-                mCurrentPageIndex++;
-                onLoadMoreCompleted(true, items.size() > 0);
-            }
-
-            @Override
-            public void onError(Throwable ex)
-            {
-                onLoadMoreCompleted(false, true);
-            }
-        }, Schedulers.io(), unsubscribeWhen(LIFECYCLE_STOP));
-    }
-
-    /**
-     * 返回第一页的索引，默认值为1。
-     * */
-    protected int getStartPageIndex()
-    {
-        return 1;
-    }
-
-    /**
-     * 当Refresh完成时调用
-     * */
-    protected void onRefreshCompleted(boolean success)
-    {
-
-    }
-
-    /**
-     * 当LoadMore完成时调用
-     * */
-    protected void onLoadMoreCompleted(boolean success, boolean hasMoreData)
-    {
-
     }
 
     /**
@@ -171,5 +107,5 @@ public abstract class BaseListFragment<M> extends BaseFragment
      * <p>
      * 此方法总是在IO线程中执行。
      * */
-    protected abstract List<M> getItems(int pageIndex);
+    protected abstract List<M> getItems();
 }
