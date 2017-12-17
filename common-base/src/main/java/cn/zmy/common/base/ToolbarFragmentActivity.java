@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import cn.zmy.common.base.fragment.NavigationFragment;
 import cn.zmy.common.utils.ViewUtil;
 
 /**

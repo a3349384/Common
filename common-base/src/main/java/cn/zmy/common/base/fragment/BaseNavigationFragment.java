@@ -1,4 +1,4 @@
-package cn.zmy.common.base;
+package cn.zmy.common.base.fragment;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;

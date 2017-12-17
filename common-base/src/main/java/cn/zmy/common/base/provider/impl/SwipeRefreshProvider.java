@@ -1,8 +1,8 @@
-package cn.zmy.common.base.provider;
+package cn.zmy.common.base.provider.impl;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import cn.zmy.common.base.IRefreshProvider;
+import cn.zmy.common.base.provider.IRefreshProvider;
 
 /**
  * Created by zmy on 2017/4/30.

@@ -1,4 +1,4 @@
-package cn.zmy.common.base;
+package cn.zmy.common.base.fragment;
 
 /**
  * Created by zmy on 2017/4/21 0021.

@@ -1,7 +1,8 @@
-package cn.zmy.common.base;
+package cn.zmy.common.base.fragment;
 
 import java.util.List;
 
+import cn.zmy.common.base.provider.IRefreshProvider;
 import cn.zmy.common.base.task.ITaskCallback;
 import rx.schedulers.Schedulers;
 

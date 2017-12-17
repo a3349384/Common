@@ -1,4 +1,4 @@
-package cn.zmy.common.base;
+package cn.zmy.common.base.provider;
 
 /**
  * Created by zmy on 2017/12/17.

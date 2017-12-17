@@ -1,9 +1,11 @@
-package cn.zmy.common.base;
+package cn.zmy.common.base.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+
+import cn.zmy.common.base.ToolbarFragmentActivity;
 
 /**
  * Created by zmy on 2016/3/19 0019.
