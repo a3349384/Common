@@ -1,34 +1,19 @@
-apply plugin: 'com.android.library'
+apply plugin: 'java-library'
 apply plugin: 'com.novoda.bintray-release'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
-
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.2'
 }
 
 publish {
     userOrg = 'a3349384'
     groupId = 'cn.zmy.common'
     artifactId = 'common-json'
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
     desc = 'gson util'
     website = 'https://github.com/a3349384/Common'
 }
