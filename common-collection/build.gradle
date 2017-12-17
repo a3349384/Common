@@ -1,0 +1,18 @@
+apply plugin: 'java-library'
+apply plugin: 'com.novoda.bintray-release'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+publish {
+    userOrg = 'a3349384'
+    groupId = 'cn.zmy.common'
+    artifactId = 'common-collection'
+    publishVersion = '1.0.0'
+    desc = 'Observable list from android databinding'
+    website = 'https://github.com/a3349384/Common'
+}

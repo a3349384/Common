@@ -1,1 +1,1 @@
-include ':app', ':common-http', ':common-json', ':common-utils', ':common-base', ':common-binding', ':common-widget'
+include ':app', ':common-http', ':common-json', ':common-utils', ':common-base', ':common-binding', ':common-widget', ':common-collection'
